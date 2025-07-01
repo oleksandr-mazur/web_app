@@ -23,13 +23,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract version info
-        id: version
-        run: |
-          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-          COMMIT_HASH=$(git rev-parse --short HEAD)
-          VERSION=${TAG:-$COMMIT_HASH}
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+      # - name: Extract version info
+      #   id: version
+      #   run: |
+      #     TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+      #     COMMIT_HASH=$(git rev-parse --short HEAD)
+      #     VERSION=${TAG:-$COMMIT_HASH}
+      #     echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Login to DockerHub
         if: github.event_name != 'pull_request'
@@ -44,5 +44,5 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
