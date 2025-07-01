@@ -23,11 +23,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Extract version info
+        id: version
+        run: |
+          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          VERSION=${TAG:-$COMMIT_HASH}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
 
       - name: Login to DockerHub
         if: github.event_name != 'pull_request'
@@ -37,13 +45,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract version info
-        id: version
-        run: |
-          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-          COMMIT_HASH=$(git rev-parse --short HEAD)
-          VERSION=${TAG:-$COMMIT_HASH}
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
 
       - name: Build and push
         uses: docker/build-push-action@v5
