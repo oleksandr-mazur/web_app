@@ -1,19 +1,21 @@
 services:
   traefik:
-    image: traefik:v3.0
+    image: traefik:v3.4.3
     command:
-      - --api.dashboard=true
+      - --api.dashboard=false
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --entrypoints.websecure.address=:443
+      - --entrypoints.web.address=:80
+      - --log.level=DEBUG
       - --certificatesresolvers.le.acme.tlschallenge=true
-      - --certificatesresolvers.le.acme.email=your@email.com
+      - --certificatesresolvers.le.acme.email=web@devopa.kyiv.ua
       - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
     ports:
       - "443:443"
+      - "80:80"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
       - ./traefik/acme.json:/letsencrypt/acme.json
     restart: always
     networks:
@@ -24,9 +26,9 @@ services:
     container_name: web
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`web.devops.kyiv.ua`)"
-      - "traefik.http.routers.whoami.entrypoints=websecure"
-      - "traefik.http.routers.whoami.tls.certresolver=le"
+      - "traefik.http.routers.web.rule=Host(`web.devops.kyiv.ua`)"
+      - "traefik.http.routers.web.entrypoints=websecure"
+      - "traefik.http.routers.web.tls.certresolver=le"
     networks:
       - web
 

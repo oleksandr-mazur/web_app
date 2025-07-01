@@ -35,3 +35,8 @@ apt-get update
 apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
 cd /home/web && git clone https://github.com/oleksandr-mazur/web_app.git src
+mv src/traefik/ .
+chmod 600 traefik/acme.json
+mv src/docker-compose.yaml .
+rm -r src
+docker compose up -d
