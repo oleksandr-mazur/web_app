@@ -36,8 +36,7 @@ apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docke
 usermod -aG docker web
 
 cd /home/web && git clone https://github.com/oleksandr-mazur/web_app.git src
-mv src/traefik/ .
-chmod 600 traefik/acme.json
+mkdir traefik && touch traefik/acme.json && chmod 600 traefik/acme.json
 mv src/docker-compose.yaml .
 rm -r src
 docker compose up -d
