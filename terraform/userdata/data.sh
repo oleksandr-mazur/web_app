@@ -6,7 +6,7 @@ echo "web ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/web
 
 # Configure ssh to non standart post
 cat > /etc/ssh/sshd_config.d/sshd.conf << EOF
-Port 2200
+Port 22
 PermitRootLogin no
 PasswordAuthentication no
 EOF
@@ -33,6 +33,7 @@ echo \
 apt-get update
 
 apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+usermod -aG docker web
 
 cd /home/web && git clone https://github.com/oleksandr-mazur/web_app.git src
 mv src/traefik/ .

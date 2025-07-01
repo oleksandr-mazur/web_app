@@ -37,6 +37,6 @@ resource "cloudflare_record" "devops_kyiv_ntfy" {
 output "host_ip" {
   description = "Host ip"
   value = {
-    endpoint = "ssh web@${hcloud_server.web.ipv4_address} -p 2200"
+    endpoint = "ssh web@${hcloud_server.web.ipv4_address} -p 22"
   }
 }
